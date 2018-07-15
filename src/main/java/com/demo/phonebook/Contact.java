@@ -1,9 +1,7 @@
 package com.demo.phonebook;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 public class Contact {
@@ -18,17 +16,12 @@ public class Contact {
     @Column
     private String lastName;
 
-    @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "userId")
-    private User user;
-
 
     public Contact(){
 
     }
 
-    public Contact(Long contactId, String firstName, String lastName) {
-        this.contactId = contactId;
+    public Contact(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -57,12 +50,29 @@ public class Contact {
         this.lastName = lastName;
     }
 
-    @JsonIgnore //tekrar getirmeyi önlülyo
-    public User getUser() {
-        return user;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contact contact = (Contact) o;
+        return Objects.equals(contactId, contact.contactId) &&
+                Objects.equals(firstName, contact.firstName) &&
+                Objects.equals(lastName, contact.lastName);
+
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(contactId, firstName, lastName);
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "contactId=" + contactId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }
